@@ -1,12 +1,84 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 datasource db {
   provider = "mysql"
 }
 
 generator client {
   provider = "prisma-client-js"
+}
+
+model Patient {
+  id          String     @id @default(uuid())
+  name        String
+  dob         DateTime
+  barangayId  String
+  address     String?
+  contactNo   String?
+  emergencyContact String?
+  createdAt   DateTime   @default(now())
+  visits      Visit[]
+  followUps   FollowUp[]
+}
+
+model Nurse {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  password      String
+  createdAt     DateTime       @default(now())
+  consultations Consultation[]
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Visit {
+  id           String             @id @default(uuid())
+  patient      Patient            @relation(fields: [patientId], references: [id])
+  patientId    String
+  date         DateTime           @default(now())
+  assessment   SymptomAssessment?
+  consultation Consultation?
+}
+
+model SymptomAssessment {
+  id        String @id @default(uuid())
+  visit     Visit  @relation(fields: [visitId], references: [id])
+  visitId   String @unique
+  symptoms  Json
+  answers   Json
+}
+
+model Consultation {
+  id           String       @id @default(uuid())
+  visit        Visit        @relation(fields: [visitId], references: [id])
+  visitId      String       @unique
+  nurse        Nurse        @relation(fields: [nurseId], references: [id])
+  nurseId      String
+  notes        String       @db.Text
+  mlSuggestion Json?
+  date         DateTime     @default(now())
+  medications  Medication[]
+}
+
+model Medication {
+  id             String       @id @default(uuid())
+  consultation   Consultation @relation(fields: [consultationId], references: [id])
+  consultationId String
+  name           String
+  notes          String?
+}
+
+model FollowUp {
+  id        String   @id @default(uuid())
+  patient   Patient  @relation(fields: [patientId], references: [id])
+  patientId String
+  date      DateTime
+  reason    String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
 }
