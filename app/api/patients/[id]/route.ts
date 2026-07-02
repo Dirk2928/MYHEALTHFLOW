@@ -1,0 +1,68 @@
+import { NextResponse } from 'next/server'
+import { prisma } from '../../../../lib/prisma'
+
+// GET one patient
+export async function GET(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const patient = await prisma.patient.findUnique({
+      where: { id },
+      include: { visits: true, followUps: true },
+    })
+    if (!patient) {
+      return NextResponse.json({ error: 'Patient not found' }, { status: 404 })
+    }
+    return NextResponse.json(patient)
+  } catch (error) {
+    console.error('GET /api/patients/[id] error:', error)
+    return NextResponse.json({ error: String(error) }, { status: 500 })
+  }
+}
+
+// PUT update patient
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    const body = await request.json()
+    const { name, dob, barangayId, address, contactNo, emergencyContact } = body
+
+    const patient = await prisma.patient.update({
+      where: { id },
+      data: {
+        name,
+        dob: new Date(dob),
+        barangayId,
+        address,
+        contactNo,
+        emergencyContact,
+      },
+    })
+    return NextResponse.json(patient)
+  } catch (error) {
+    console.error('PUT /api/patients/[id] error:', error)
+    return NextResponse.json({ error: String(error) }, { status: 500 })
+  }
+}
+
+// DELETE patient
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params
+    await prisma.patient.delete({
+      where: { id },
+    })
+    return NextResponse.json({ message: 'Patient deleted' })
+  } catch (error) {
+    console.error('DELETE /api/patients/[id] error:', error)
+    return NextResponse.json({ error: String(error) }, { status: 500 })
+  }
+}
