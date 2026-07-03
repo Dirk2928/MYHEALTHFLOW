@@ -51,6 +51,12 @@ export default function PatientProfilePage() {
             >
               Edit
             </Link>
+            <Link
+              href={`/dashboard/patients/${id}/assess`}
+              className="bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
+            >
+              New Assessment
+            </Link>
             <button
               onClick={handleDelete}
               className="bg-red-500 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
