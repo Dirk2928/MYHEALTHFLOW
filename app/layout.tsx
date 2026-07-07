@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Providers } from './providers'
+
 export const metadata: Metadata = {
   title: 'MyHealthFlow+ Lite',
   description: 'Barangay Health Center System',
@@ -13,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
