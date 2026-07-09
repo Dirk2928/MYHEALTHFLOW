@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs'
 import { prisma } from './prisma'
 
 export const authOptions: NextAuthOptions = {
+  debug: true,
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -48,15 +49,16 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.role = (user as any).role
-        token.id = (user as any).id
+        const authUser = user as { role?: string; id?: string }
+        token.role = authUser.role as string
+        token.id = authUser.id as string
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).role = (token as any).role
-        (session.user as any).id = token.id
+        ;(session.user as typeof session.user & { role: string; id: string }).role = token.role as string
+        ;(session.user as typeof session.user & { role: string; id: string }).id = token.id as string
       }
       return session
     },
