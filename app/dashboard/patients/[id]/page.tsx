@@ -77,12 +77,6 @@ export default function PatientProfilePage() {
               href={`/dashboard/patients/${id}/assess`}
               className="bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
             >
-              New Assessment
-            </Link>
-            <Link
-              href={`/dashboard/patients/${id}/consult`}
-              className="bg-purple-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
-            >
               New Consultation
             </Link>
             <button
@@ -248,7 +242,7 @@ export default function PatientProfilePage() {
         )}
 
         <button
-          onClick={() => router.back()}
+          onClick={() => router.push('/dashboard')}
           className="mt-4 text-sm text-gray-500 hover:text-gray-700"
         >
           ← Back to patients

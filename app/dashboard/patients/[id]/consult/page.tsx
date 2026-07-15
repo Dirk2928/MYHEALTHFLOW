@@ -98,6 +98,13 @@ const MEDICATION_SUGGESTIONS = [
   },
 ]
 
+type MLPrediction = {
+  prediction: string
+  confidence: number
+  all_probabilities: Record<string, number>
+  disclaimer: string
+}
+
 export default function ConsultationPage() {
   const { id } = useParams()
   const router = useRouter()
@@ -107,7 +114,9 @@ export default function ConsultationPage() {
   const [selectedMeds, setSelectedMeds] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [step, setStep] = useState<'symptoms' | 'consultation'>('symptoms')
+  const [step, setStep] = useState<'symptoms' | 'consultation' | 'prediction'>('symptoms')
+  const [mlPrediction, setMlPrediction] = useState<MLPrediction | null>(null)
+  const [mlLoading, setMlLoading] = useState(false)
 
   const toggleSymptom = (key: string) => {
     setSelectedSymptoms((prev) =>
@@ -135,6 +144,62 @@ export default function ConsultationPage() {
     )
   }
 
+  const getMaxSeverity = () => {
+    let maxSeverity = 1
+    SYMPTOMS.filter((s) => selectedSymptoms.includes(s.key)).forEach((symptom) => {
+      const severityAnswer = answers[symptom.key]?.['severity']
+      if (severityAnswer) {
+        const num = parseInt(severityAnswer)
+        if (!isNaN(num) && num > maxSeverity) {
+          maxSeverity = num
+        }
+      }
+    })
+    return maxSeverity
+  }
+
+  const getMaxDuration = () => {
+    let maxDuration = 1
+    SYMPTOMS.filter((s) => selectedSymptoms.includes(s.key)).forEach((symptom) => {
+      const durationAnswer = answers[symptom.key]?.['duration']
+      if (durationAnswer) {
+        if (durationAnswer === 'Less than 1 day') maxDuration = Math.max(maxDuration, 1)
+        else if (durationAnswer === '1–3 days') maxDuration = Math.max(maxDuration, 2)
+        else if (durationAnswer === 'More than 3 days') maxDuration = Math.max(maxDuration, 5)
+      }
+    })
+    return maxDuration
+  }
+
+  const getMLPrediction = async () => {
+    setMlLoading(true)
+    try {
+      const severity = getMaxSeverity()
+      const durationDays = getMaxDuration()
+
+      const res = await fetch('http://localhost:5000/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          symptoms: selectedSymptoms,
+          severity: severity,
+          duration_days: durationDays,
+          age_group: 'adult',
+        }),
+      })
+
+      if (res.ok) {
+        const data = await res.json()
+        setMlPrediction(data)
+        setStep('prediction')
+      }
+    } catch (err) {
+      console.error('ML API error:', err)
+    } finally {
+      setMlLoading(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (selectedSymptoms.length === 0) {
@@ -144,7 +209,7 @@ export default function ConsultationPage() {
     setLoading(true)
     setError('')
 
-const res = await fetch('/api/consultations', {
+    const res = await fetch('/api/consultations', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -160,6 +225,7 @@ const res = await fetch('/api/consultations', {
             notes: null,
           }
         }),
+        mlPrediction: mlPrediction,
       }),
     })
 
@@ -171,6 +237,12 @@ const res = await fetch('/api/consultations', {
     }
   }
 
+  const getConcernColor = (concern: string) => {
+    if (concern.includes('Severe')) return 'bg-red-100 border-red-300 text-red-800'
+    if (concern.includes('Moderate')) return 'bg-yellow-100 border-yellow-300 text-yellow-800'
+    return 'bg-green-100 border-green-300 text-green-800'
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-3xl mx-auto">
@@ -179,7 +251,6 @@ const res = await fetch('/api/consultations', {
           Record symptoms, findings, and medications for this visit.
         </p>
 
-        {/* Step indicator */}
         <div className="flex gap-4 mb-8">
           <button
             onClick={() => setStep('symptoms')}
@@ -189,7 +260,7 @@ const res = await fetch('/api/consultations', {
                 : 'bg-white text-gray-600 border border-gray-300'
             }`}
           >
-            1. Symptoms & Assessment
+            1. Symptoms
           </button>
           <button
             onClick={() => setStep('consultation')}
@@ -199,14 +270,23 @@ const res = await fetch('/api/consultations', {
                 : 'bg-white text-gray-600 border border-gray-300'
             }`}
           >
-            2. Notes & Medications
+            2. Notes & Meds
+          </button>
+          <button
+            onClick={() => mlPrediction && setStep('prediction')}
+            className={`text-sm font-medium px-4 py-2 rounded-lg transition-colors ${
+              step === 'prediction'
+                ? 'bg-blue-600 text-white'
+                : 'bg-white text-gray-600 border border-gray-300'
+            }`}
+          >
+            3. ML Assessment
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {step === 'symptoms' && (
             <>
-              {/* Symptom checkboxes */}
               <div className="bg-white rounded-xl border border-gray-200 p-6">
                 <h2 className="text-sm font-medium text-gray-700 mb-4">Select Symptoms</h2>
                 <div className="grid grid-cols-2 gap-3">
@@ -231,7 +311,6 @@ const res = await fetch('/api/consultations', {
                 </div>
               </div>
 
-              {/* Follow-up questions */}
               {SYMPTOMS.filter((s) => selectedSymptoms.includes(s.key)).map((symptom) => (
                 <div key={symptom.key} className="bg-white rounded-xl border border-blue-200 p-6">
                   <h2 className="text-sm font-medium text-blue-700 mb-4">
@@ -271,7 +350,6 @@ const res = await fetch('/api/consultations', {
 
           {step === 'consultation' && (
             <>
-              {/* Consultation notes */}
               <div className="bg-white rounded-xl border border-gray-200 p-6">
                 <h2 className="text-sm font-medium text-gray-700 mb-4">Consultation Notes</h2>
                 <textarea
@@ -283,7 +361,6 @@ const res = await fetch('/api/consultations', {
                 />
               </div>
 
-              {/* Medication suggestions */}
               {suggestedMeds.length > 0 && (
                 <div className="bg-white rounded-xl border border-gray-200 p-6">
                   <h2 className="text-sm font-medium text-gray-700 mb-2">
@@ -325,7 +402,57 @@ const res = await fetch('/api/consultations', {
                   </div>
                 </div>
               )}
+
+              <div className="bg-white rounded-xl border border-gray-200 p-6">
+                <h2 className="text-sm font-medium text-gray-700 mb-4">ML-Assisted Risk Assessment</h2>
+                <p className="text-xs text-gray-400 mb-4">
+                  Click below to get an AI-assisted health concern prediction based on the selected symptoms.
+                </p>
+                <button
+                  type="button"
+                  onClick={getMLPrediction}
+                  disabled={mlLoading}
+                  className="bg-indigo-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+                >
+                  {mlLoading ? 'Analyzing...' : 'Run ML Assessment'}
+                </button>
+              </div>
             </>
+          )}
+
+          {step === 'prediction' && mlPrediction && (
+            <div className={`rounded-xl border p-6 ${getConcernColor(mlPrediction.prediction)}`}>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-semibold">ML Risk Assessment</h2>
+                <span className="text-sm font-medium">
+                  Confidence: {mlPrediction.confidence}%
+                </span>
+              </div>
+              
+              <div className="mb-4">
+                <p className="text-2xl font-bold mb-2">{mlPrediction.prediction}</p>
+                <div className="w-full bg-white bg-opacity-30 rounded-full h-3">
+                  <div
+                    className="bg-white bg-opacity-80 h-3 rounded-full transition-all"
+                    style={{ width: `${mlPrediction.confidence}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1 mb-4">
+                <p className="text-sm font-medium">All Predictions:</p>
+                {Object.entries(mlPrediction.all_probabilities).map(([concern, prob]) => (
+                  <div key={concern} className="flex justify-between text-sm">
+                    <span>{concern}</span>
+                    <span className="font-medium">{(prob * 100).toFixed(1)}%</span>
+                  </div>
+                ))}
+              </div>
+
+              <p className="text-xs italic opacity-75 border-t border-current pt-3 mt-3">
+                {mlPrediction.disclaimer}
+              </p>
+            </div>
           )}
 
           {error && (
@@ -334,9 +461,8 @@ const res = await fetch('/api/consultations', {
             </p>
           )}
 
-          {/* Navigation buttons */}
           <div className="flex gap-3">
-            {step === 'symptoms' ? (
+            {step === 'symptoms' && (
               <button
                 type="button"
                 onClick={() => setStep('consultation')}
@@ -344,23 +470,24 @@ const res = await fetch('/api/consultations', {
               >
                 Next: Notes & Medications →
               </button>
-            ) : (
-              <>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="bg-green-600 text-white text-sm font-medium px-6 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
-                >
-                  {loading ? 'Saving...' : 'Save Consultation'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setStep('symptoms')}
-                  className="text-sm text-gray-600 px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50"
-                >
-                  ← Back to Symptoms
-                </button>
-              </>
+            )}
+            {step === 'consultation' && (
+              <button
+                type="button"
+                onClick={() => mlPrediction ? setStep('prediction') : setError('Please run ML Assessment first')}
+                className="bg-blue-600 text-white text-sm font-medium px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              >
+                Next: Review →
+              </button>
+            )}
+            {step === 'prediction' && (
+              <button
+                type="submit"
+                disabled={loading}
+                className="bg-green-600 text-white text-sm font-medium px-6 py-2 rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50"
+              >
+                {loading ? 'Saving...' : 'Save Consultation'}
+              </button>
             )}
             <button
               type="button"

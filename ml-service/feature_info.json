@@ -1,0 +1,18 @@
+{
+  "feature_columns": [
+    "dizziness",
+    "fever",
+    "cough",
+    "headache",
+    "fatigue",
+    "age_group",
+    "severity",
+    "duration_days"
+  ],
+  "health_concerns": [
+    "Mild - Rest advised",
+    "Moderate - Needs monitoring",
+    "Severe - Urgent referral"
+  ],
+  "accuracy": 1.0
+}
