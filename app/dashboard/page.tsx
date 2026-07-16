@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useEffect, useState } from 'react'
@@ -19,10 +20,23 @@ type DashboardData = {
   recentVisits: RecentVisit[]
 }
 
+type FollowUpReminder = {
+  id: string
+  date: string
+  reason: string
+  status: string
+  isOverdue: boolean
+  patient: {
+    id: string
+    name: string
+  }
+}
+
 export default function DashboardPage() {
   const { data: session } = useSession()
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
+  const [followUps, setFollowUps] = useState<FollowUpReminder[]>([])
 
   useEffect(() => {
     fetch('/api/dashboard')
@@ -30,6 +44,16 @@ export default function DashboardPage() {
       .then((d) => {
         setData(d)
         setLoading(false)
+      })
+  }, [])
+
+  useEffect(() => {
+    fetch('/api/follow-ups?status=all')
+      .then((res) => res.json())
+      .then((data) => {
+        const overdue = data.filter((f: FollowUpReminder) => f.isOverdue)
+        const pending = data.filter((f: FollowUpReminder) => f.status === 'pending' && !f.isOverdue)
+        setFollowUps([...overdue, ...pending].slice(0, 5))
       })
   }, [])
 
@@ -79,6 +103,48 @@ export default function DashboardPage() {
               ))}
             </div>
 
+            {/* Follow-Up Reminders */}
+            {followUps.length > 0 && (
+              <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-sm font-medium text-gray-700">Follow-Up Reminders</h2>
+                  <Link href="/dashboard/follow-ups" className="text-xs text-blue-600 hover:underline">
+                    View all
+                  </Link>
+                </div>
+                <div className="space-y-2">
+                  {followUps.map((f) => (
+                    <div
+                      key={f.id}
+                      className={`flex items-center justify-between p-3 rounded-lg ${
+                        f.isOverdue ? 'bg-red-50 border border-red-200' : 'bg-yellow-50 border border-yellow-200'
+                      }`}
+                    >
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">
+                          <Link href={`/dashboard/patients/${f.patient.id}`} className="hover:underline">
+                            {f.patient.name}
+                          </Link>
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(f.date).toLocaleDateString()} — {f.reason}
+                        </p>
+                      </div>
+                      <span
+                        className={`text-xs font-medium px-2 py-1 rounded-full ${
+                          f.isOverdue
+                            ? 'bg-red-100 text-red-700'
+                            : 'bg-yellow-100 text-yellow-700'
+                        }`}
+                      >
+                        {f.isOverdue ? 'Overdue' : 'Pending'}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Quick actions */}
             <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
               <h2 className="text-sm font-medium text-gray-700 mb-4">Quick Actions</h2>
@@ -94,6 +160,12 @@ export default function DashboardPage() {
                   className="bg-white text-gray-700 text-sm font-medium px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
                 >
                   View All Patients
+                </Link>
+                <Link
+                  href="/dashboard/follow-ups"
+                  className="bg-white text-gray-700 text-sm font-medium px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                >
+                  Follow-Ups
                 </Link>
               </div>
             </div>

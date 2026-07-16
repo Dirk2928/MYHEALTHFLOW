@@ -47,12 +47,25 @@ export default function PatientProfilePage() {
         setPatient(data)
         setLoading(false)
       })
+      .catch((error) => {
+        console.error('Error fetching patient:', error)
+        setLoading(false)
+      })
   }, [id])
 
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this patient?')) return
-    await fetch(`/api/patients/${id}`, { method: 'DELETE' })
-    router.push('/dashboard/patients')
+    try {
+      const res = await fetch(`/api/patients/${id}`, { method: 'DELETE' })
+      if (res.ok) {
+        router.push('/dashboard/patients')
+      } else {
+        alert('Failed to delete patient')
+      }
+    } catch (error) {
+      console.error('Error deleting patient:', error)
+      alert('An error occurred')
+    }
   }
 
   if (loading) return <p className="p-8 text-gray-500 text-sm">Loading...</p>
@@ -64,9 +77,10 @@ export default function PatientProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-3xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
+        {/* Header with patient name and actions */}
+        <div className="flex items-start justify-between mb-6">
           <h1 className="text-2xl font-semibold text-gray-900">{patient.name}</h1>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <Link
               href={`/dashboard/patients/${id}/edit`}
               className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
@@ -78,6 +92,12 @@ export default function PatientProfilePage() {
               className="bg-green-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
             >
               New Consultation
+            </Link>
+            <Link
+              href={`/dashboard/patients/${id}/follow-up`}
+              className="bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors"
+            >
+              Schedule Follow-Up
             </Link>
             <button
               onClick={handleDelete}
@@ -241,9 +261,10 @@ export default function PatientProfilePage() {
           </div>
         )}
 
+        {/* Back button */}
         <button
           onClick={() => router.push('/dashboard')}
-          className="mt-4 text-sm text-gray-500 hover:text-gray-700"
+          className="mt-6 text-sm text-gray-500 hover:text-gray-700 transition-colors"
         >
           ← Back to patients
         </button>
