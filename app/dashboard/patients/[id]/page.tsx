@@ -97,14 +97,8 @@ export default function PatientProfilePage() {
               href={`/dashboard/patients/${id}/follow-up`}
               className="bg-amber-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-amber-700 transition-colors"
             >
-              Schedule Follow-Up
-            </Link>
-            <button
-              onClick={handleDelete}
-              className="bg-red-500 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-red-600 transition-colors"
-            >
               Delete
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -260,8 +254,6 @@ export default function PatientProfilePage() {
             )}
           </div>
         )}
-
-        {/* Back button */}
         <button
           onClick={() => router.push('/dashboard')}
           className="mt-6 text-sm text-gray-500 hover:text-gray-700 transition-colors"

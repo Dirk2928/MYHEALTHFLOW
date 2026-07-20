@@ -3,27 +3,14 @@ import { prisma } from '../../../lib/prisma'
 
 export async function GET() {
   try {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    const tomorrow = new Date(today)
-    tomorrow.setDate(tomorrow.getDate() + 1)
+    const now = new Date()
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+    const todayEnd = new Date(todayStart)
+    todayEnd.setDate(todayEnd.getDate() + 1)
 
-    // Total patients
     const totalPatients = await prisma.patient.count()
 
-    // Today's visits
-    const todayVisits = await prisma.visit.count({
-      where: {
-        date: {
-          gte: today,
-          lt: tomorrow,
-        },
-      },
-    })
-
-    // Recent visits with patient info
-    const recentVisits = await prisma.visit.findMany({
-      take: 5,
+    const allVisits = await prisma.visit.findMany({
       orderBy: { date: 'desc' },
       include: {
         patient: true,
@@ -31,24 +18,16 @@ export async function GET() {
       },
     })
 
-    // Pending follow-ups
-    const pendingFollowUps = await prisma.followUp.count({
-      where: { status: 'pending' },
-    })
+    const todayVisits = allVisits.filter((v) => {
+      const vDate = new Date(v.date)
+      return vDate >= todayStart && vDate < todayEnd
+    }).length
 
-    // Overdue follow-ups
-    const overdueFollowUps = await prisma.followUp.count({
-      where: {
-        status: 'pending',
-        date: { lt: today },
-      },
-    })
+    const recentVisits = allVisits.slice(0, 5)
 
     return NextResponse.json({
       totalPatients,
       todayVisits,
-      pendingFollowUps,
-      overdueFollowUps,
       recentVisits,
     })
   } catch (error) {

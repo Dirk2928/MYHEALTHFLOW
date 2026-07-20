@@ -1,9 +1,9 @@
-
 'use client'
 
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 type RecentVisit = {
   id: string
@@ -15,28 +15,15 @@ type RecentVisit = {
 type DashboardData = {
   totalPatients: number
   todayVisits: number
-  pendingFollowUps: number
-  overdueFollowUps: number
   recentVisits: RecentVisit[]
-}
-
-type FollowUpReminder = {
-  id: string
-  date: string
-  reason: string
-  status: string
-  isOverdue: boolean
-  patient: {
-    id: string
-    name: string
-  }
 }
 
 export default function DashboardPage() {
   const { data: session } = useSession()
   const [data, setData] = useState<DashboardData | null>(null)
   const [loading, setLoading] = useState(true)
-  const [followUps, setFollowUps] = useState<FollowUpReminder[]>([])
+  const [currentTime, setCurrentTime] = useState<Date | null>(null)
+  const [chartData, setChartData] = useState<any[]>([])
 
   useEffect(() => {
     fetch('/api/dashboard')
@@ -48,130 +35,79 @@ export default function DashboardPage() {
   }, [])
 
   useEffect(() => {
-    fetch('/api/follow-ups?status=all')
+    fetch('/api/dashboard/daily')
       .then((res) => res.json())
-      .then((data) => {
-        const overdue = data.filter((f: FollowUpReminder) => f.isOverdue)
-        const pending = data.filter((f: FollowUpReminder) => f.status === 'pending' && !f.isOverdue)
-        setFollowUps([...overdue, ...pending].slice(0, 5))
-      })
+      .then((d) => setChartData(d || []))
+      .catch(() => setChartData([]))
+  }, [])
+
+  useEffect(() => {
+    setCurrentTime(new Date())
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000)
+    return () => clearInterval(timer)
   }, [])
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top navbar */}
-      <nav className="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between">
-        <span className="text-base font-semibold text-gray-900">MyHealthFlow+ Lite</span>
+    <div className="min-h-screen bg-cover bg-center bg-fixed" style={{ backgroundImage: "url('/jru_login.jpg')" }}>
+      <nav className="bg-white/90 backdrop-blur-sm border-b border-gray-200 px-8 py-4 flex items-center justify-between">
+        <img src="/jru_logo.png" alt="MyHealthFlow+" className="h-10 w-auto" />
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500">
-            {(session?.user as any)?.role === 'nurse' ? '👩‍⚕️' : '🔧'} {session?.user?.name}
+          <span className="text-sm text-gray-700">
+            {(session?.user as any)?.role === 'nurse' ? '' : '🔧'} {session?.user?.name}
           </span>
-          <Link
-            href="/api/auth/signout"
-            className="text-sm text-red-500 hover:text-red-700"
-          >
-            Sign out
-          </Link>
+          <Link href="/api/auth/signout" className="text-sm text-red-500 hover:text-red-700">Sign out</Link>
         </div>
       </nav>
 
       <div className="max-w-5xl mx-auto p-8">
-        <h1 className="text-2xl font-semibold text-gray-900 mb-1">Dashboard</h1>
-        <p className="text-sm text-gray-500 mb-8">
-          {new Date().toLocaleDateString('en-PH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+        <h1 className="text-2xl font-semibold text-white mb-1 drop-shadow-lg">Dashboard</h1>
+        <p className="text-sm text-yellow-100 mb-8 drop-shadow">
+          {currentTime
+            ? currentTime.toLocaleDateString('en-PH', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', second: '2-digit' })
+            : 'Loading...'}
         </p>
 
         {loading ? (
-          <p className="text-sm text-gray-500">Loading dashboard...</p>
+          <p className="text-sm text-white">Loading dashboard...</p>
         ) : (
           <>
-            {/* Stats cards */}
-            <div className="grid grid-cols-2 gap-4 mb-8 sm:grid-cols-4">
-              {[
-                { label: 'Total Patients', value: data?.totalPatients ?? 0, color: 'blue' },
-                { label: "Today's Visits", value: data?.todayVisits ?? 0, color: 'green' },
-                { label: 'Pending Follow-ups', value: data?.pendingFollowUps ?? 0, color: 'yellow' },
-                { label: 'Overdue Follow-ups', value: data?.overdueFollowUps ?? 0, color: 'red' },
-              ].map((card) => (
-                <div
-                  key={card.label}
-                  className="bg-white rounded-xl border border-gray-200 p-5"
-                >
-                  <p className="text-sm text-gray-500 mb-1">{card.label}</p>
-                  <p className="text-3xl font-bold text-gray-900">{card.value}</p>
-                </div>
-              ))}
+            <div className="grid grid-cols-2 gap-4 mb-8">
+              <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-white/50 p-5 shadow-lg">
+                <p className="text-sm text-gray-500 mb-1">Total Patients</p>
+                <p className="text-3xl font-bold text-gray-900">{data?.totalPatients ?? 0}</p>
+              </div>
+              <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-white/50 p-5 shadow-lg">
+                <p className="text-sm text-gray-500 mb-1">Today's Visits</p>
+                <p className="text-3xl font-bold text-gray-900">{data?.todayVisits ?? 0}</p>
+              </div>
             </div>
 
-            {/* Follow-Up Reminders */}
-            {followUps.length > 0 && (
-              <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-sm font-medium text-gray-700">Follow-Up Reminders</h2>
-                  <Link href="/dashboard/follow-ups" className="text-xs text-blue-600 hover:underline">
-                    View all
-                  </Link>
-                </div>
-                <div className="space-y-2">
-                  {followUps.map((f) => (
-                    <div
-                      key={f.id}
-                      className={`flex items-center justify-between p-3 rounded-lg ${
-                        f.isOverdue ? 'bg-red-50 border border-red-200' : 'bg-yellow-50 border border-yellow-200'
-                      }`}
-                    >
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">
-                          <Link href={`/dashboard/patients/${f.patient.id}`} className="hover:underline">
-                            {f.patient.name}
-                          </Link>
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {new Date(f.date).toLocaleDateString()} — {f.reason}
-                        </p>
-                      </div>
-                      <span
-                        className={`text-xs font-medium px-2 py-1 rounded-full ${
-                          f.isOverdue
-                            ? 'bg-red-100 text-red-700'
-                            : 'bg-yellow-100 text-yellow-700'
-                        }`}
-                      >
-                        {f.isOverdue ? 'Overdue' : 'Pending'}
-                      </span>
-                    </div>
-                  ))}
+            {chartData.length >= 0 && (
+              <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-white/50 p-6 mb-6 shadow-lg">
+                <h2 className="text-sm font-medium text-gray-700 mb-4">Visits Per Day</h2>
+                <div style={{ width: '100%', height: Math.max(chartData.length * 50, 200) }}>
+                  <ResponsiveContainer>
+                    <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 30, left: 60, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" horizontal={false} />
+                      <XAxis type="number" allowDecimals={false} tick={{ fontSize: 12 }} stroke="#6b7280" />
+                      <YAxis dataKey="date" type="category" tick={{ fontSize: 12 }} stroke="#6b7280" />
+                      <Tooltip />
+                      <Bar dataKey="visits" fill="#3b82f6" radius={[0, 4, 4, 0]} barSize={20} />
+                    </BarChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
             )}
 
-            {/* Quick actions */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6 mb-6">
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-white/50 p-6 mb-6 shadow-lg">
               <h2 className="text-sm font-medium text-gray-700 mb-4">Quick Actions</h2>
               <div className="flex flex-wrap gap-3">
-                <Link
-                  href="/dashboard/patients/new"
-                  className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                >
-                  + Register Patient
-                </Link>
-                <Link
-                  href="/dashboard/patients"
-                  className="bg-white text-gray-700 text-sm font-medium px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
-                >
-                  View All Patients
-                </Link>
-                <Link
-                  href="/dashboard/follow-ups"
-                  className="bg-white text-gray-700 text-sm font-medium px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
-                >
-                  Follow-Ups
-                </Link>
+                <Link href="/dashboard/patients/new" className="bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">+ Register Patient</Link>
+                <Link href="/dashboard/patients" className="bg-white text-gray-700 text-sm font-medium px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">View All Patients</Link>
               </div>
             </div>
 
-            {/* Recent visits */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <div className="bg-white/90 backdrop-blur-sm rounded-xl border border-white/50 p-6 shadow-lg">
               <h2 className="text-sm font-medium text-gray-700 mb-4">Recent Visits</h2>
               {data?.recentVisits.length === 0 ? (
                 <p className="text-sm text-gray-400">No visits yet.</p>
@@ -191,22 +127,9 @@ export default function DashboardPage() {
                       <tr key={visit.id} className="border-b border-gray-50 hover:bg-gray-50">
                         <td className="py-3 font-medium text-gray-900">{visit.patient.name}</td>
                         <td className="py-3 text-gray-500">{visit.patient.barangayId}</td>
-                        <td className="py-3 text-gray-500">
-                          {visit.assessment
-                            ? (visit.assessment.symptoms as string[]).join(', ')
-                            : '—'}
-                        </td>
-                        <td className="py-3 text-gray-500">
-                          {new Date(visit.date).toLocaleDateString()}
-                        </td>
-                        <td className="py-3">
-                          <Link
-                            href={`/dashboard/patients/${visit.patient.id}`}
-                            className="text-blue-600 hover:underline"
-                          >
-                            View
-                          </Link>
-                        </td>
+                        <td className="py-3 text-gray-500">{visit.assessment ? (visit.assessment.symptoms as string[]).join(', ') : '—'}</td>
+                        <td className="py-3 text-gray-500">{new Date(visit.date).toLocaleDateString()}</td>
+                        <td className="py-3"><Link href={`/dashboard/patients/${visit.patient.id}`} className="text-blue-600 hover:underline">View</Link></td>
                       </tr>
                     ))}
                   </tbody>
