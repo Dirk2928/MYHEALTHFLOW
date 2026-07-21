@@ -64,16 +64,20 @@ export async function PUT(
   }
 }
 
-// DELETE patient
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params
-    await prisma.patient.delete({
-      where: { id },
-    })
+    
+    await prisma.followUp.deleteMany({ where: { patientId: id } })
+    await prisma.medication.deleteMany({ where: { consultation: { visit: { patientId: id } } } })
+    await prisma.consultation.deleteMany({ where: { visit: { patientId: id } } })
+    await prisma.symptomAssessment.deleteMany({ where: { visit: { patientId: id } } })
+    await prisma.visit.deleteMany({ where: { patientId: id } })
+    await prisma.patient.delete({ where: { id } })
+    
     return NextResponse.json({ message: 'Patient deleted' })
   } catch (error) {
     console.error('DELETE /api/patients/[id] error:', error)
