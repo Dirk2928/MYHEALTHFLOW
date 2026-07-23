@@ -1,18 +1,16 @@
 import { PrismaClient } from '../src/generated/prisma/client'
-import { PrismaMariaDb } from '@prisma/adapter-mariadb'
+import { PrismaLibSql } from '@prisma/adapter-libsql'
 import bcrypt from 'bcryptjs'
 import * as dotenv from 'dotenv'
 
 dotenv.config()
 
-const adapter = new PrismaMariaDb({
-  host: '127.0.0.1',
-  port: 3306,
-  user: 'root',
-  password: '',
-  database: 'myhealthflow',
-  connectionLimit: 5,
-})
+const url =
+  process.env.TURSO_DATABASE_URL ?? process.env.DATABASE_URL ?? 'file:./prisma/local.db'
+const authToken = process.env.TURSO_AUTH_TOKEN
+const adapter = new PrismaLibSql(
+  authToken ? { url, authToken } : { url }
+)
 
 const prisma = new PrismaClient({ adapter })
 

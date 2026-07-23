@@ -183,7 +183,6 @@ export type MedicationOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   consultation?: Prisma.ConsultationOrderByWithRelationInput
-  _relevance?: Prisma.MedicationOrderByRelevanceInput
 }
 
 export type MedicationWhereUniqueInput = Prisma.AtLeast<{
@@ -275,12 +274,6 @@ export type MedicationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type MedicationOrderByRelevanceInput = {
-  fields: Prisma.MedicationOrderByRelevanceFieldEnum | Prisma.MedicationOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
-}
-
 export type MedicationCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   consultationId?: Prisma.SortOrder
@@ -363,7 +356,6 @@ export type MedicationCreateOrConnectWithoutConsultationInput = {
 
 export type MedicationCreateManyConsultationInputEnvelope = {
   data: Prisma.MedicationCreateManyConsultationInput | Prisma.MedicationCreateManyConsultationInput[]
-  skipDuplicates?: boolean
 }
 
 export type MedicationUpsertWithWhereUniqueWithoutConsultationInput = {
@@ -426,7 +418,21 @@ export type MedicationSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   consultation?: boolean | Prisma.ConsultationDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["medication"]>
 
+export type MedicationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  consultationId?: boolean
+  name?: boolean
+  notes?: boolean
+  consultation?: boolean | Prisma.ConsultationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["medication"]>
 
+export type MedicationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  consultationId?: boolean
+  name?: boolean
+  notes?: boolean
+  consultation?: boolean | Prisma.ConsultationDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["medication"]>
 
 export type MedicationSelectScalar = {
   id?: boolean
@@ -437,6 +443,12 @@ export type MedicationSelectScalar = {
 
 export type MedicationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "consultationId" | "name" | "notes", ExtArgs["result"]["medication"]>
 export type MedicationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  consultation?: boolean | Prisma.ConsultationDefaultArgs<ExtArgs>
+}
+export type MedicationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  consultation?: boolean | Prisma.ConsultationDefaultArgs<ExtArgs>
+}
+export type MedicationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   consultation?: boolean | Prisma.ConsultationDefaultArgs<ExtArgs>
 }
 
@@ -568,6 +580,30 @@ export interface MedicationDelegate<ExtArgs extends runtime.Types.Extensions.Int
   createMany<T extends MedicationCreateManyArgs>(args?: Prisma.SelectSubset<T, MedicationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Medications and returns the data saved in the database.
+   * @param {MedicationCreateManyAndReturnArgs} args - Arguments to create many Medications.
+   * @example
+   * // Create many Medications
+   * const medication = await prisma.medication.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Medications and only return the `id`
+   * const medicationWithIdOnly = await prisma.medication.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends MedicationCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, MedicationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Medication.
    * @param {MedicationDeleteArgs} args - Arguments to delete one Medication.
    * @example
@@ -630,6 +666,36 @@ export interface MedicationDelegate<ExtArgs extends runtime.Types.Extensions.Int
    * 
    */
   updateMany<T extends MedicationUpdateManyArgs>(args: Prisma.SelectSubset<T, MedicationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Medications and returns the data updated in the database.
+   * @param {MedicationUpdateManyAndReturnArgs} args - Arguments to update many Medications.
+   * @example
+   * // Update many Medications
+   * const medication = await prisma.medication.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Medications and only return the `id`
+   * const medicationWithIdOnly = await prisma.medication.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends MedicationUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, MedicationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MedicationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Medication.
@@ -1058,7 +1124,28 @@ export type MedicationCreateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * The data used to create many Medications.
    */
   data: Prisma.MedicationCreateManyInput | Prisma.MedicationCreateManyInput[]
-  skipDuplicates?: boolean
+}
+
+/**
+ * Medication createManyAndReturn
+ */
+export type MedicationCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Medication
+   */
+  select?: Prisma.MedicationSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Medication
+   */
+  omit?: Prisma.MedicationOmit<ExtArgs> | null
+  /**
+   * The data used to create many Medications.
+   */
+  data: Prisma.MedicationCreateManyInput | Prisma.MedicationCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MedicationIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1103,6 +1190,36 @@ export type MedicationUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Limit how many Medications to update.
    */
   limit?: number
+}
+
+/**
+ * Medication updateManyAndReturn
+ */
+export type MedicationUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Medication
+   */
+  select?: Prisma.MedicationSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Medication
+   */
+  omit?: Prisma.MedicationOmit<ExtArgs> | null
+  /**
+   * The data used to update Medications.
+   */
+  data: Prisma.XOR<Prisma.MedicationUpdateManyMutationInput, Prisma.MedicationUncheckedUpdateManyInput>
+  /**
+   * Filter which Medications to update
+   */
+  where?: Prisma.MedicationWhereInput
+  /**
+   * Limit how many Medications to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MedicationIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

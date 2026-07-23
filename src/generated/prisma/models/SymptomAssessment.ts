@@ -175,7 +175,6 @@ export type SymptomAssessmentOrderByWithRelationInput = {
   symptoms?: Prisma.SortOrder
   answers?: Prisma.SortOrder
   visit?: Prisma.VisitOrderByWithRelationInput
-  _relevance?: Prisma.SymptomAssessmentOrderByRelevanceInput
 }
 
 export type SymptomAssessmentWhereUniqueInput = Prisma.AtLeast<{
@@ -260,12 +259,6 @@ export type SymptomAssessmentUncheckedUpdateManyInput = {
 export type SymptomAssessmentNullableScalarRelationFilter = {
   is?: Prisma.SymptomAssessmentWhereInput | null
   isNot?: Prisma.SymptomAssessmentWhereInput | null
-}
-
-export type SymptomAssessmentOrderByRelevanceInput = {
-  fields: Prisma.SymptomAssessmentOrderByRelevanceFieldEnum | Prisma.SymptomAssessmentOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type SymptomAssessmentCountOrderByAggregateInput = {
@@ -367,7 +360,21 @@ export type SymptomAssessmentSelect<ExtArgs extends runtime.Types.Extensions.Int
   visit?: boolean | Prisma.VisitDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["symptomAssessment"]>
 
+export type SymptomAssessmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  visitId?: boolean
+  symptoms?: boolean
+  answers?: boolean
+  visit?: boolean | Prisma.VisitDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["symptomAssessment"]>
 
+export type SymptomAssessmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  visitId?: boolean
+  symptoms?: boolean
+  answers?: boolean
+  visit?: boolean | Prisma.VisitDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["symptomAssessment"]>
 
 export type SymptomAssessmentSelectScalar = {
   id?: boolean
@@ -378,6 +385,12 @@ export type SymptomAssessmentSelectScalar = {
 
 export type SymptomAssessmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "visitId" | "symptoms" | "answers", ExtArgs["result"]["symptomAssessment"]>
 export type SymptomAssessmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  visit?: boolean | Prisma.VisitDefaultArgs<ExtArgs>
+}
+export type SymptomAssessmentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  visit?: boolean | Prisma.VisitDefaultArgs<ExtArgs>
+}
+export type SymptomAssessmentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   visit?: boolean | Prisma.VisitDefaultArgs<ExtArgs>
 }
 
@@ -509,6 +522,30 @@ export interface SymptomAssessmentDelegate<ExtArgs extends runtime.Types.Extensi
   createMany<T extends SymptomAssessmentCreateManyArgs>(args?: Prisma.SelectSubset<T, SymptomAssessmentCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many SymptomAssessments and returns the data saved in the database.
+   * @param {SymptomAssessmentCreateManyAndReturnArgs} args - Arguments to create many SymptomAssessments.
+   * @example
+   * // Create many SymptomAssessments
+   * const symptomAssessment = await prisma.symptomAssessment.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many SymptomAssessments and only return the `id`
+   * const symptomAssessmentWithIdOnly = await prisma.symptomAssessment.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends SymptomAssessmentCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, SymptomAssessmentCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SymptomAssessmentPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a SymptomAssessment.
    * @param {SymptomAssessmentDeleteArgs} args - Arguments to delete one SymptomAssessment.
    * @example
@@ -571,6 +608,36 @@ export interface SymptomAssessmentDelegate<ExtArgs extends runtime.Types.Extensi
    * 
    */
   updateMany<T extends SymptomAssessmentUpdateManyArgs>(args: Prisma.SelectSubset<T, SymptomAssessmentUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more SymptomAssessments and returns the data updated in the database.
+   * @param {SymptomAssessmentUpdateManyAndReturnArgs} args - Arguments to update many SymptomAssessments.
+   * @example
+   * // Update many SymptomAssessments
+   * const symptomAssessment = await prisma.symptomAssessment.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more SymptomAssessments and only return the `id`
+   * const symptomAssessmentWithIdOnly = await prisma.symptomAssessment.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends SymptomAssessmentUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, SymptomAssessmentUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SymptomAssessmentPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one SymptomAssessment.
@@ -999,7 +1066,28 @@ export type SymptomAssessmentCreateManyArgs<ExtArgs extends runtime.Types.Extens
    * The data used to create many SymptomAssessments.
    */
   data: Prisma.SymptomAssessmentCreateManyInput | Prisma.SymptomAssessmentCreateManyInput[]
-  skipDuplicates?: boolean
+}
+
+/**
+ * SymptomAssessment createManyAndReturn
+ */
+export type SymptomAssessmentCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SymptomAssessment
+   */
+  select?: Prisma.SymptomAssessmentSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SymptomAssessment
+   */
+  omit?: Prisma.SymptomAssessmentOmit<ExtArgs> | null
+  /**
+   * The data used to create many SymptomAssessments.
+   */
+  data: Prisma.SymptomAssessmentCreateManyInput | Prisma.SymptomAssessmentCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SymptomAssessmentIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1044,6 +1132,36 @@ export type SymptomAssessmentUpdateManyArgs<ExtArgs extends runtime.Types.Extens
    * Limit how many SymptomAssessments to update.
    */
   limit?: number
+}
+
+/**
+ * SymptomAssessment updateManyAndReturn
+ */
+export type SymptomAssessmentUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SymptomAssessment
+   */
+  select?: Prisma.SymptomAssessmentSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the SymptomAssessment
+   */
+  omit?: Prisma.SymptomAssessmentOmit<ExtArgs> | null
+  /**
+   * The data used to update SymptomAssessments.
+   */
+  data: Prisma.XOR<Prisma.SymptomAssessmentUpdateManyMutationInput, Prisma.SymptomAssessmentUncheckedUpdateManyInput>
+  /**
+   * Filter which SymptomAssessments to update
+   */
+  where?: Prisma.SymptomAssessmentWhereInput
+  /**
+   * Limit how many SymptomAssessments to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SymptomAssessmentIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

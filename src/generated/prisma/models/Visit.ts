@@ -178,7 +178,6 @@ export type VisitOrderByWithRelationInput = {
   patient?: Prisma.PatientOrderByWithRelationInput
   assessment?: Prisma.SymptomAssessmentOrderByWithRelationInput
   consultation?: Prisma.ConsultationOrderByWithRelationInput
-  _relevance?: Prisma.VisitOrderByRelevanceInput
 }
 
 export type VisitWhereUniqueInput = Prisma.AtLeast<{
@@ -268,12 +267,6 @@ export type VisitListRelationFilter = {
 
 export type VisitOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type VisitOrderByRelevanceInput = {
-  fields: Prisma.VisitOrderByRelevanceFieldEnum | Prisma.VisitOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type VisitCountOrderByAggregateInput = {
@@ -390,7 +383,6 @@ export type VisitCreateOrConnectWithoutPatientInput = {
 
 export type VisitCreateManyPatientInputEnvelope = {
   data: Prisma.VisitCreateManyPatientInput | Prisma.VisitCreateManyPatientInput[]
-  skipDuplicates?: boolean
 }
 
 export type VisitUpsertWithWhereUniqueWithoutPatientInput = {
@@ -541,7 +533,19 @@ export type VisitSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   consultation?: boolean | Prisma.Visit$consultationArgs<ExtArgs>
 }, ExtArgs["result"]["visit"]>
 
+export type VisitSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  patientId?: boolean
+  date?: boolean
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["visit"]>
 
+export type VisitSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  patientId?: boolean
+  date?: boolean
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["visit"]>
 
 export type VisitSelectScalar = {
   id?: boolean
@@ -554,6 +558,12 @@ export type VisitInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
   assessment?: boolean | Prisma.Visit$assessmentArgs<ExtArgs>
   consultation?: boolean | Prisma.Visit$consultationArgs<ExtArgs>
+}
+export type VisitIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
+}
+export type VisitIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  patient?: boolean | Prisma.PatientDefaultArgs<ExtArgs>
 }
 
 export type $VisitPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -685,6 +695,30 @@ export interface VisitDelegate<ExtArgs extends runtime.Types.Extensions.Internal
   createMany<T extends VisitCreateManyArgs>(args?: Prisma.SelectSubset<T, VisitCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Visits and returns the data saved in the database.
+   * @param {VisitCreateManyAndReturnArgs} args - Arguments to create many Visits.
+   * @example
+   * // Create many Visits
+   * const visit = await prisma.visit.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Visits and only return the `id`
+   * const visitWithIdOnly = await prisma.visit.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends VisitCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, VisitCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VisitPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Visit.
    * @param {VisitDeleteArgs} args - Arguments to delete one Visit.
    * @example
@@ -747,6 +781,36 @@ export interface VisitDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * 
    */
   updateMany<T extends VisitUpdateManyArgs>(args: Prisma.SelectSubset<T, VisitUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Visits and returns the data updated in the database.
+   * @param {VisitUpdateManyAndReturnArgs} args - Arguments to update many Visits.
+   * @example
+   * // Update many Visits
+   * const visit = await prisma.visit.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Visits and only return the `id`
+   * const visitWithIdOnly = await prisma.visit.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends VisitUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, VisitUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$VisitPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Visit.
@@ -1176,7 +1240,28 @@ export type VisitCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Visits.
    */
   data: Prisma.VisitCreateManyInput | Prisma.VisitCreateManyInput[]
-  skipDuplicates?: boolean
+}
+
+/**
+ * Visit createManyAndReturn
+ */
+export type VisitCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Visit
+   */
+  select?: Prisma.VisitSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Visit
+   */
+  omit?: Prisma.VisitOmit<ExtArgs> | null
+  /**
+   * The data used to create many Visits.
+   */
+  data: Prisma.VisitCreateManyInput | Prisma.VisitCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VisitIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1221,6 +1306,36 @@ export type VisitUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Visits to update.
    */
   limit?: number
+}
+
+/**
+ * Visit updateManyAndReturn
+ */
+export type VisitUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Visit
+   */
+  select?: Prisma.VisitSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Visit
+   */
+  omit?: Prisma.VisitOmit<ExtArgs> | null
+  /**
+   * The data used to update Visits.
+   */
+  data: Prisma.XOR<Prisma.VisitUpdateManyMutationInput, Prisma.VisitUncheckedUpdateManyInput>
+  /**
+   * Filter which Visits to update
+   */
+  where?: Prisma.VisitWhereInput
+  /**
+   * Limit how many Visits to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.VisitIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

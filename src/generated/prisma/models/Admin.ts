@@ -190,7 +190,6 @@ export type AdminOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   password?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  _relevance?: Prisma.AdminOrderByRelevanceInput
 }
 
 export type AdminWhereUniqueInput = Prisma.AtLeast<{
@@ -282,12 +281,6 @@ export type AdminUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
-export type AdminOrderByRelevanceInput = {
-  fields: Prisma.AdminOrderByRelevanceFieldEnum | Prisma.AdminOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
-}
-
 export type AdminCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   name?: Prisma.SortOrder
@@ -322,7 +315,21 @@ export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
 }, ExtArgs["result"]["admin"]>
 
+export type AdminSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  name?: boolean
+  email?: boolean
+  password?: boolean
+  createdAt?: boolean
+}, ExtArgs["result"]["admin"]>
 
+export type AdminSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  name?: boolean
+  email?: boolean
+  password?: boolean
+  createdAt?: boolean
+}, ExtArgs["result"]["admin"]>
 
 export type AdminSelectScalar = {
   id?: boolean
@@ -461,6 +468,30 @@ export interface AdminDelegate<ExtArgs extends runtime.Types.Extensions.Internal
   createMany<T extends AdminCreateManyArgs>(args?: Prisma.SelectSubset<T, AdminCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Admins and returns the data saved in the database.
+   * @param {AdminCreateManyAndReturnArgs} args - Arguments to create many Admins.
+   * @example
+   * // Create many Admins
+   * const admin = await prisma.admin.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Admins and only return the `id`
+   * const adminWithIdOnly = await prisma.admin.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends AdminCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, AdminCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Admin.
    * @param {AdminDeleteArgs} args - Arguments to delete one Admin.
    * @example
@@ -523,6 +554,36 @@ export interface AdminDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * 
    */
   updateMany<T extends AdminUpdateManyArgs>(args: Prisma.SelectSubset<T, AdminUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Admins and returns the data updated in the database.
+   * @param {AdminUpdateManyAndReturnArgs} args - Arguments to update many Admins.
+   * @example
+   * // Update many Admins
+   * const admin = await prisma.admin.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Admins and only return the `id`
+   * const adminWithIdOnly = await prisma.admin.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends AdminUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, AdminUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Admin.
@@ -927,7 +988,24 @@ export type AdminCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Admins.
    */
   data: Prisma.AdminCreateManyInput | Prisma.AdminCreateManyInput[]
-  skipDuplicates?: boolean
+}
+
+/**
+ * Admin createManyAndReturn
+ */
+export type AdminCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Admin
+   */
+  select?: Prisma.AdminSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Admin
+   */
+  omit?: Prisma.AdminOmit<ExtArgs> | null
+  /**
+   * The data used to create many Admins.
+   */
+  data: Prisma.AdminCreateManyInput | Prisma.AdminCreateManyInput[]
 }
 
 /**
@@ -956,6 +1034,32 @@ export type AdminUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
  * Admin updateMany
  */
 export type AdminUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The data used to update Admins.
+   */
+  data: Prisma.XOR<Prisma.AdminUpdateManyMutationInput, Prisma.AdminUncheckedUpdateManyInput>
+  /**
+   * Filter which Admins to update
+   */
+  where?: Prisma.AdminWhereInput
+  /**
+   * Limit how many Admins to update.
+   */
+  limit?: number
+}
+
+/**
+ * Admin updateManyAndReturn
+ */
+export type AdminUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Admin
+   */
+  select?: Prisma.AdminSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Admin
+   */
+  omit?: Prisma.AdminOmit<ExtArgs> | null
   /**
    * The data used to update Admins.
    */
