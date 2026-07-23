@@ -1,10 +1,10 @@
 import { defineConfig } from 'prisma/config'
 import * as dotenv from 'dotenv'
+import { resolveLibSqlUrl } from './lib/libsql-url'
 
 dotenv.config()
 
-const databaseUrl =
-  process.env.TURSO_DATABASE_URL ?? process.env.DATABASE_URL ?? 'file:./prisma/local.db'
+const databaseUrl = resolveLibSqlUrl()
 
 export default defineConfig({
   datasource: {
