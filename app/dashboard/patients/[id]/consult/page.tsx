@@ -174,7 +174,7 @@ export default function ConsultationPage() {
     try {
       const severity = getMaxSeverity()
       const durationDays = getMaxDuration()
-      const res = await fetch('http://localhost:5000/predict', {
+      const res = await fetch('https://myhealthflow.onrender.com/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ symptoms: selectedSymptoms, severity, duration_days: durationDays, age_group: 'adult' }),
