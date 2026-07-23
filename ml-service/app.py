@@ -17,6 +17,10 @@ with open('feature_info.json', 'r') as f:
 print(f"Model loaded. Features: {feature_info['feature_columns']}")
 print(f"Health concerns: {feature_info['health_concerns']}")
 
+@app.route('/', methods=['GET'])
+def home():
+    return jsonify({'status': 'ok', 'message': 'MyHealthFlow ML API is running'})
+
 @app.route('/health', methods=['GET'])
 def health():
     return jsonify({
@@ -78,8 +82,9 @@ if __name__ == '__main__':
     print("MyHealthFlow+ Lite - ML Prediction API")
     print("=" * 50)
     print(f"Endpoints:")
-    print(f"  GET  /health   - API health check")
-    print(f"  POST /predict  - Predict health concern")
+    print(f"  GET  /        - Home")
+    print(f"  GET  /health  - API health check")
+    print(f"  POST /predict - Predict health concern")
     print(f"\nStarting server on http://localhost:5000")
     print("=" * 50 + "\n")
     app.run(host='0.0.0.0', port=5000, debug=True)
