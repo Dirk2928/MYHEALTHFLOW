@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '../../../../lib/prisma'
 
-// GET one patient
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -29,14 +28,30 @@ export async function GET(
     if (!patient) {
       return NextResponse.json({ error: 'Patient not found' }, { status: 404 })
     }
-    return NextResponse.json(patient)
+
+    const parsedPatient = {
+      ...patient,
+      visits: patient.visits.map((visit: any) => ({
+        ...visit,
+        assessment: visit.assessment ? {
+          ...visit.assessment,
+          symptoms: typeof visit.assessment.symptoms === 'string' 
+            ? JSON.parse(visit.assessment.symptoms) 
+            : visit.assessment.symptoms,
+          answers: typeof visit.assessment.answers === 'string' 
+            ? JSON.parse(visit.assessment.answers) 
+            : visit.assessment.answers,
+        } : null,
+      })),
+    }
+
+    return NextResponse.json(parsedPatient)
   } catch (error) {
     console.error('GET /api/patients/[id] error:', error)
     return NextResponse.json({ error: String(error) }, { status: 500 })
   }
 }
 
-// PUT update patient
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

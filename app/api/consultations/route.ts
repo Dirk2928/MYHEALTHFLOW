@@ -8,12 +8,8 @@ export async function POST(request: Request) {
     const body = await request.json()
     const { patientId, symptoms, answers, notes, medications } = body
 
-    // Pass the request to getServerSession
     const session = await getServerSession(authOptions)
     
-    console.log('SESSION:', JSON.stringify(session))
-
-    // Try getting nurse by email if id fails
     const userEmail = session?.user?.email
     const userId = (session?.user as any)?.id
 
@@ -41,8 +37,8 @@ export async function POST(request: Request) {
     const assessment = await prisma.symptomAssessment.create({
       data: {
         visitId: visit.id,
-        symptoms,
-        answers,
+        symptoms: JSON.stringify(symptoms),
+        answers: JSON.stringify(answers),
       },
     })
 
