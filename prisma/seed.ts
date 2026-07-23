@@ -2,30 +2,56 @@ import { PrismaClient } from '../src/generated/prisma/client'
 import { PrismaLibSql } from '@prisma/adapter-libsql'
 import bcrypt from 'bcryptjs'
 import * as dotenv from 'dotenv'
+import { resolveLibSqlConnection } from '../lib/libsql-url'
 
 dotenv.config()
 
-const url =
-  process.env.TURSO_DATABASE_URL ?? process.env.DATABASE_URL ?? 'file:./prisma/local.db'
-const authToken = process.env.TURSO_AUTH_TOKEN
-const adapter = new PrismaLibSql(
-  authToken ? { url, authToken } : { url }
-)
+const connection = resolveLibSqlConnection()
+const adapter = new PrismaLibSql(connection)
 
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
-  const hashedPassword = await bcrypt.hash('password123', 10)
+  const nurseEmail = process.env.SEED_NURSE_EMAIL ?? 'nurse@test.com'
+  const nursePassword = process.env.SEED_NURSE_PASSWORD ?? 'password123'
+  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'admin@test.com'
+  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'admin123'
 
-  await prisma.nurse.create({
-    data: {
+  const hashedNursePassword = await bcrypt.hash(nursePassword, 10)
+  const hashedAdminPassword = await bcrypt.hash(adminPassword, 10)
+
+  await prisma.nurse.upsert({
+    where: {
+      email: nurseEmail,
+    },
+    update: {
       name: 'Nurse Raeva',
-      email: 'nurse@test.com',
-      password: hashedPassword,
+      password: hashedNursePassword,
+    },
+    create: {
+      name: 'Nurse Raeva',
+      email: nurseEmail,
+      password: hashedNursePassword,
     },
   })
 
-  console.log('Test nurse created!')
+  await prisma.admin.upsert({
+    where: {
+      email: adminEmail,
+    },
+    update: {
+      name: 'Admin User',
+      password: hashedAdminPassword,
+    },
+    create: {
+      name: 'Admin User',
+      email: adminEmail,
+      password: hashedAdminPassword,
+    },
+  })
+
+  console.log(`Seeded nurse account: ${nurseEmail} / ${nursePassword}`)
+  console.log(`Seeded admin account: ${adminEmail} / ${adminPassword}`)
 }
 
 main()

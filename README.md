@@ -23,8 +23,12 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 3. Sync schema to your database:
 
 ```bash
-npx prisma db push
+npm run db:setup
 ```
+
+Seeded login credentials (customizable via `.env`):
+- Nurse: `nurse@test.com` / `password123`
+- Admin: `admin@test.com` / `admin123`
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
