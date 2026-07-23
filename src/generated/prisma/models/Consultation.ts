@@ -201,7 +201,6 @@ export type ConsultationOrderByWithRelationInput = {
   visit?: Prisma.VisitOrderByWithRelationInput
   nurse?: Prisma.NurseOrderByWithRelationInput
   medications?: Prisma.MedicationOrderByRelationAggregateInput
-  _relevance?: Prisma.ConsultationOrderByRelevanceInput
 }
 
 export type ConsultationWhereUniqueInput = Prisma.AtLeast<{
@@ -321,12 +320,6 @@ export type ConsultationOrderByRelationAggregateInput = {
 export type ConsultationNullableScalarRelationFilter = {
   is?: Prisma.ConsultationWhereInput | null
   isNot?: Prisma.ConsultationWhereInput | null
-}
-
-export type ConsultationOrderByRelevanceInput = {
-  fields: Prisma.ConsultationOrderByRelevanceFieldEnum | Prisma.ConsultationOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type ConsultationCountOrderByAggregateInput = {
@@ -472,7 +465,6 @@ export type ConsultationCreateOrConnectWithoutNurseInput = {
 
 export type ConsultationCreateManyNurseInputEnvelope = {
   data: Prisma.ConsultationCreateManyNurseInput | Prisma.ConsultationCreateManyNurseInput[]
-  skipDuplicates?: boolean
 }
 
 export type ConsultationUpsertWithWhereUniqueWithoutNurseInput = {
@@ -685,7 +677,27 @@ export type ConsultationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   _count?: boolean | Prisma.ConsultationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["consultation"]>
 
+export type ConsultationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  visitId?: boolean
+  nurseId?: boolean
+  notes?: boolean
+  mlSuggestion?: boolean
+  date?: boolean
+  visit?: boolean | Prisma.VisitDefaultArgs<ExtArgs>
+  nurse?: boolean | Prisma.NurseDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["consultation"]>
 
+export type ConsultationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  visitId?: boolean
+  nurseId?: boolean
+  notes?: boolean
+  mlSuggestion?: boolean
+  date?: boolean
+  visit?: boolean | Prisma.VisitDefaultArgs<ExtArgs>
+  nurse?: boolean | Prisma.NurseDefaultArgs<ExtArgs>
+}, ExtArgs["result"]["consultation"]>
 
 export type ConsultationSelectScalar = {
   id?: boolean
@@ -702,6 +714,14 @@ export type ConsultationInclude<ExtArgs extends runtime.Types.Extensions.Interna
   nurse?: boolean | Prisma.NurseDefaultArgs<ExtArgs>
   medications?: boolean | Prisma.Consultation$medicationsArgs<ExtArgs>
   _count?: boolean | Prisma.ConsultationCountOutputTypeDefaultArgs<ExtArgs>
+}
+export type ConsultationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  visit?: boolean | Prisma.VisitDefaultArgs<ExtArgs>
+  nurse?: boolean | Prisma.NurseDefaultArgs<ExtArgs>
+}
+export type ConsultationIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  visit?: boolean | Prisma.VisitDefaultArgs<ExtArgs>
+  nurse?: boolean | Prisma.NurseDefaultArgs<ExtArgs>
 }
 
 export type $ConsultationPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -836,6 +856,30 @@ export interface ConsultationDelegate<ExtArgs extends runtime.Types.Extensions.I
   createMany<T extends ConsultationCreateManyArgs>(args?: Prisma.SelectSubset<T, ConsultationCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Consultations and returns the data saved in the database.
+   * @param {ConsultationCreateManyAndReturnArgs} args - Arguments to create many Consultations.
+   * @example
+   * // Create many Consultations
+   * const consultation = await prisma.consultation.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Consultations and only return the `id`
+   * const consultationWithIdOnly = await prisma.consultation.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends ConsultationCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, ConsultationCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConsultationPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Consultation.
    * @param {ConsultationDeleteArgs} args - Arguments to delete one Consultation.
    * @example
@@ -898,6 +942,36 @@ export interface ConsultationDelegate<ExtArgs extends runtime.Types.Extensions.I
    * 
    */
   updateMany<T extends ConsultationUpdateManyArgs>(args: Prisma.SelectSubset<T, ConsultationUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Consultations and returns the data updated in the database.
+   * @param {ConsultationUpdateManyAndReturnArgs} args - Arguments to update many Consultations.
+   * @example
+   * // Update many Consultations
+   * const consultation = await prisma.consultation.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Consultations and only return the `id`
+   * const consultationWithIdOnly = await prisma.consultation.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends ConsultationUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, ConsultationUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ConsultationPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Consultation.
@@ -1330,7 +1404,28 @@ export type ConsultationCreateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * The data used to create many Consultations.
    */
   data: Prisma.ConsultationCreateManyInput | Prisma.ConsultationCreateManyInput[]
-  skipDuplicates?: boolean
+}
+
+/**
+ * Consultation createManyAndReturn
+ */
+export type ConsultationCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Consultation
+   */
+  select?: Prisma.ConsultationSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Consultation
+   */
+  omit?: Prisma.ConsultationOmit<ExtArgs> | null
+  /**
+   * The data used to create many Consultations.
+   */
+  data: Prisma.ConsultationCreateManyInput | Prisma.ConsultationCreateManyInput[]
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConsultationIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -1375,6 +1470,36 @@ export type ConsultationUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Limit how many Consultations to update.
    */
   limit?: number
+}
+
+/**
+ * Consultation updateManyAndReturn
+ */
+export type ConsultationUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Consultation
+   */
+  select?: Prisma.ConsultationSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Consultation
+   */
+  omit?: Prisma.ConsultationOmit<ExtArgs> | null
+  /**
+   * The data used to update Consultations.
+   */
+  data: Prisma.XOR<Prisma.ConsultationUpdateManyMutationInput, Prisma.ConsultationUncheckedUpdateManyInput>
+  /**
+   * Filter which Consultations to update
+   */
+  where?: Prisma.ConsultationWhereInput
+  /**
+   * Limit how many Consultations to update.
+   */
+  limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ConsultationIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**

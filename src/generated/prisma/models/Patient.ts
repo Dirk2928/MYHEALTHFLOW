@@ -221,7 +221,6 @@ export type PatientOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   visits?: Prisma.VisitOrderByRelationAggregateInput
   followUps?: Prisma.FollowUpOrderByRelationAggregateInput
-  _relevance?: Prisma.PatientOrderByRelevanceInput
 }
 
 export type PatientWhereUniqueInput = Prisma.AtLeast<{
@@ -351,12 +350,6 @@ export type PatientUncheckedUpdateManyInput = {
   contactNo?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type PatientOrderByRelevanceInput = {
-  fields: Prisma.PatientOrderByRelevanceFieldEnum | Prisma.PatientOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type PatientCountOrderByAggregateInput = {
@@ -619,7 +612,27 @@ export type PatientSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   _count?: boolean | Prisma.PatientCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["patient"]>
 
+export type PatientSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  name?: boolean
+  dob?: boolean
+  barangayId?: boolean
+  address?: boolean
+  contactNo?: boolean
+  emergencyContact?: boolean
+  createdAt?: boolean
+}, ExtArgs["result"]["patient"]>
 
+export type PatientSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  name?: boolean
+  dob?: boolean
+  barangayId?: boolean
+  address?: boolean
+  contactNo?: boolean
+  emergencyContact?: boolean
+  createdAt?: boolean
+}, ExtArgs["result"]["patient"]>
 
 export type PatientSelectScalar = {
   id?: boolean
@@ -638,6 +651,8 @@ export type PatientInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   followUps?: boolean | Prisma.Patient$followUpsArgs<ExtArgs>
   _count?: boolean | Prisma.PatientCountOutputTypeDefaultArgs<ExtArgs>
 }
+export type PatientIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type PatientIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $PatientPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Patient"
@@ -772,6 +787,30 @@ export interface PatientDelegate<ExtArgs extends runtime.Types.Extensions.Intern
   createMany<T extends PatientCreateManyArgs>(args?: Prisma.SelectSubset<T, PatientCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Patients and returns the data saved in the database.
+   * @param {PatientCreateManyAndReturnArgs} args - Arguments to create many Patients.
+   * @example
+   * // Create many Patients
+   * const patient = await prisma.patient.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Patients and only return the `id`
+   * const patientWithIdOnly = await prisma.patient.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends PatientCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, PatientCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PatientPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Patient.
    * @param {PatientDeleteArgs} args - Arguments to delete one Patient.
    * @example
@@ -834,6 +873,36 @@ export interface PatientDelegate<ExtArgs extends runtime.Types.Extensions.Intern
    * 
    */
   updateMany<T extends PatientUpdateManyArgs>(args: Prisma.SelectSubset<T, PatientUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Patients and returns the data updated in the database.
+   * @param {PatientUpdateManyAndReturnArgs} args - Arguments to update many Patients.
+   * @example
+   * // Update many Patients
+   * const patient = await prisma.patient.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Patients and only return the `id`
+   * const patientWithIdOnly = await prisma.patient.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends PatientUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, PatientUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PatientPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Patient.
@@ -1267,7 +1336,24 @@ export type PatientCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * The data used to create many Patients.
    */
   data: Prisma.PatientCreateManyInput | Prisma.PatientCreateManyInput[]
-  skipDuplicates?: boolean
+}
+
+/**
+ * Patient createManyAndReturn
+ */
+export type PatientCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Patient
+   */
+  select?: Prisma.PatientSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Patient
+   */
+  omit?: Prisma.PatientOmit<ExtArgs> | null
+  /**
+   * The data used to create many Patients.
+   */
+  data: Prisma.PatientCreateManyInput | Prisma.PatientCreateManyInput[]
 }
 
 /**
@@ -1300,6 +1386,32 @@ export type PatientUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
  * Patient updateMany
  */
 export type PatientUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The data used to update Patients.
+   */
+  data: Prisma.XOR<Prisma.PatientUpdateManyMutationInput, Prisma.PatientUncheckedUpdateManyInput>
+  /**
+   * Filter which Patients to update
+   */
+  where?: Prisma.PatientWhereInput
+  /**
+   * Limit how many Patients to update.
+   */
+  limit?: number
+}
+
+/**
+ * Patient updateManyAndReturn
+ */
+export type PatientUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Patient
+   */
+  select?: Prisma.PatientSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Patient
+   */
+  omit?: Prisma.PatientOmit<ExtArgs> | null
   /**
    * The data used to update Patients.
    */

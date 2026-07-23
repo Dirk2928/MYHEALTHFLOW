@@ -68,9 +68,6 @@ export type ModelName = (typeof ModelName)[keyof typeof ModelName]
  */
 
 export const TransactionIsolationLevel = runtime.makeStrictEnum({
-  ReadUncommitted: 'ReadUncommitted',
-  ReadCommitted: 'ReadCommitted',
-  RepeatableRead: 'RepeatableRead',
   Serializable: 'Serializable'
 } as const)
 
@@ -197,46 +194,6 @@ export const NullsOrder = {
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
 
 
-export const PatientOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  barangayId: 'barangayId',
-  address: 'address',
-  contactNo: 'contactNo',
-  emergencyContact: 'emergencyContact'
-} as const
-
-export type PatientOrderByRelevanceFieldEnum = (typeof PatientOrderByRelevanceFieldEnum)[keyof typeof PatientOrderByRelevanceFieldEnum]
-
-
-export const NurseOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  password: 'password'
-} as const
-
-export type NurseOrderByRelevanceFieldEnum = (typeof NurseOrderByRelevanceFieldEnum)[keyof typeof NurseOrderByRelevanceFieldEnum]
-
-
-export const AdminOrderByRelevanceFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  password: 'password'
-} as const
-
-export type AdminOrderByRelevanceFieldEnum = (typeof AdminOrderByRelevanceFieldEnum)[keyof typeof AdminOrderByRelevanceFieldEnum]
-
-
-export const VisitOrderByRelevanceFieldEnum = {
-  id: 'id',
-  patientId: 'patientId'
-} as const
-
-export type VisitOrderByRelevanceFieldEnum = (typeof VisitOrderByRelevanceFieldEnum)[keyof typeof VisitOrderByRelevanceFieldEnum]
-
-
 export const JsonNullValueFilter = {
   DbNull: DbNull,
   JsonNull: JsonNull,
@@ -252,42 +209,4 @@ export const QueryMode = {
 } as const
 
 export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
-
-
-export const SymptomAssessmentOrderByRelevanceFieldEnum = {
-  id: 'id',
-  visitId: 'visitId'
-} as const
-
-export type SymptomAssessmentOrderByRelevanceFieldEnum = (typeof SymptomAssessmentOrderByRelevanceFieldEnum)[keyof typeof SymptomAssessmentOrderByRelevanceFieldEnum]
-
-
-export const ConsultationOrderByRelevanceFieldEnum = {
-  id: 'id',
-  visitId: 'visitId',
-  nurseId: 'nurseId',
-  notes: 'notes'
-} as const
-
-export type ConsultationOrderByRelevanceFieldEnum = (typeof ConsultationOrderByRelevanceFieldEnum)[keyof typeof ConsultationOrderByRelevanceFieldEnum]
-
-
-export const MedicationOrderByRelevanceFieldEnum = {
-  id: 'id',
-  consultationId: 'consultationId',
-  name: 'name',
-  notes: 'notes'
-} as const
-
-export type MedicationOrderByRelevanceFieldEnum = (typeof MedicationOrderByRelevanceFieldEnum)[keyof typeof MedicationOrderByRelevanceFieldEnum]
-
-
-export const FollowUpOrderByRelevanceFieldEnum = {
-  id: 'id',
-  patientId: 'patientId',
-  reason: 'reason',
-  status: 'status'
-} as const
-
-export type FollowUpOrderByRelevanceFieldEnum = (typeof FollowUpOrderByRelevanceFieldEnum)[keyof typeof FollowUpOrderByRelevanceFieldEnum]
 

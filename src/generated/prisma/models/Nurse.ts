@@ -192,7 +192,6 @@ export type NurseOrderByWithRelationInput = {
   password?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   consultations?: Prisma.ConsultationOrderByRelationAggregateInput
-  _relevance?: Prisma.NurseOrderByRelevanceInput
 }
 
 export type NurseWhereUniqueInput = Prisma.AtLeast<{
@@ -287,12 +286,6 @@ export type NurseUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type NurseOrderByRelevanceInput = {
-  fields: Prisma.NurseOrderByRelevanceFieldEnum | Prisma.NurseOrderByRelevanceFieldEnum[]
-  sort: Prisma.SortOrder
-  search: string
 }
 
 export type NurseCountOrderByAggregateInput = {
@@ -427,7 +420,21 @@ export type NurseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   _count?: boolean | Prisma.NurseCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["nurse"]>
 
+export type NurseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  name?: boolean
+  email?: boolean
+  password?: boolean
+  createdAt?: boolean
+}, ExtArgs["result"]["nurse"]>
 
+export type NurseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
+  id?: boolean
+  name?: boolean
+  email?: boolean
+  password?: boolean
+  createdAt?: boolean
+}, ExtArgs["result"]["nurse"]>
 
 export type NurseSelectScalar = {
   id?: boolean
@@ -442,6 +449,8 @@ export type NurseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   consultations?: boolean | Prisma.Nurse$consultationsArgs<ExtArgs>
   _count?: boolean | Prisma.NurseCountOutputTypeDefaultArgs<ExtArgs>
 }
+export type NurseIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type NurseIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
 
 export type $NursePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Nurse"
@@ -572,6 +581,30 @@ export interface NurseDelegate<ExtArgs extends runtime.Types.Extensions.Internal
   createMany<T extends NurseCreateManyArgs>(args?: Prisma.SelectSubset<T, NurseCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
 
   /**
+   * Create many Nurses and returns the data saved in the database.
+   * @param {NurseCreateManyAndReturnArgs} args - Arguments to create many Nurses.
+   * @example
+   * // Create many Nurses
+   * const nurse = await prisma.nurse.createManyAndReturn({
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Create many Nurses and only return the `id`
+   * const nurseWithIdOnly = await prisma.nurse.createManyAndReturn({
+   *   select: { id: true },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  createManyAndReturn<T extends NurseCreateManyAndReturnArgs>(args?: Prisma.SelectSubset<T, NurseCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NursePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+  /**
    * Delete a Nurse.
    * @param {NurseDeleteArgs} args - Arguments to delete one Nurse.
    * @example
@@ -634,6 +667,36 @@ export interface NurseDelegate<ExtArgs extends runtime.Types.Extensions.Internal
    * 
    */
   updateMany<T extends NurseUpdateManyArgs>(args: Prisma.SelectSubset<T, NurseUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<Prisma.BatchPayload>
+
+  /**
+   * Update zero or more Nurses and returns the data updated in the database.
+   * @param {NurseUpdateManyAndReturnArgs} args - Arguments to update many Nurses.
+   * @example
+   * // Update many Nurses
+   * const nurse = await prisma.nurse.updateManyAndReturn({
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * 
+   * // Update zero or more Nurses and only return the `id`
+   * const nurseWithIdOnly = await prisma.nurse.updateManyAndReturn({
+   *   select: { id: true },
+   *   where: {
+   *     // ... provide filter here
+   *   },
+   *   data: [
+   *     // ... provide data here
+   *   ]
+   * })
+   * Note, that providing `undefined` is treated as the value not being there.
+   * Read more here: https://pris.ly/d/null-undefined
+   * 
+   */
+  updateManyAndReturn<T extends NurseUpdateManyAndReturnArgs>(args: Prisma.SelectSubset<T, NurseUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NursePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
 
   /**
    * Create or update one Nurse.
@@ -1063,7 +1126,24 @@ export type NurseCreateManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * The data used to create many Nurses.
    */
   data: Prisma.NurseCreateManyInput | Prisma.NurseCreateManyInput[]
-  skipDuplicates?: boolean
+}
+
+/**
+ * Nurse createManyAndReturn
+ */
+export type NurseCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Nurse
+   */
+  select?: Prisma.NurseSelectCreateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Nurse
+   */
+  omit?: Prisma.NurseOmit<ExtArgs> | null
+  /**
+   * The data used to create many Nurses.
+   */
+  data: Prisma.NurseCreateManyInput | Prisma.NurseCreateManyInput[]
 }
 
 /**
@@ -1096,6 +1176,32 @@ export type NurseUpdateArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
  * Nurse updateMany
  */
 export type NurseUpdateManyArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * The data used to update Nurses.
+   */
+  data: Prisma.XOR<Prisma.NurseUpdateManyMutationInput, Prisma.NurseUncheckedUpdateManyInput>
+  /**
+   * Filter which Nurses to update
+   */
+  where?: Prisma.NurseWhereInput
+  /**
+   * Limit how many Nurses to update.
+   */
+  limit?: number
+}
+
+/**
+ * Nurse updateManyAndReturn
+ */
+export type NurseUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Nurse
+   */
+  select?: Prisma.NurseSelectUpdateManyAndReturn<ExtArgs> | null
+  /**
+   * Omit specific fields from the Nurse
+   */
+  omit?: Prisma.NurseOmit<ExtArgs> | null
   /**
    * The data used to update Nurses.
    */

@@ -1,5 +1,5 @@
 datasource db {
-  provider = "mysql"
+  provider = "sqlite"
 }
 
 generator client {
@@ -60,7 +60,7 @@ model Consultation {
   visitId      String       @unique
   nurse        Nurse        @relation(fields: [nurseId], references: [id])
   nurseId      String
-  notes        String       @db.Text
+  notes        String
   mlSuggestion Json?
   date         DateTime     @default(now())
   medications  Medication[]
