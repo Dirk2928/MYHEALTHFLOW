@@ -14,11 +14,8 @@ const prisma = new PrismaClient({ adapter })
 async function main() {
   const nurseEmail = process.env.SEED_NURSE_EMAIL ?? 'nurse@test.com'
   const nursePassword = process.env.SEED_NURSE_PASSWORD ?? 'password123'
-  const adminEmail = process.env.SEED_ADMIN_EMAIL ?? 'admin@test.com'
-  const adminPassword = process.env.SEED_ADMIN_PASSWORD ?? 'admin123'
 
   const hashedNursePassword = await bcrypt.hash(nursePassword, 10)
-  const hashedAdminPassword = await bcrypt.hash(adminPassword, 10)
 
   await prisma.nurse.upsert({
     where: {
@@ -35,23 +32,7 @@ async function main() {
     },
   })
 
-  await prisma.admin.upsert({
-    where: {
-      email: adminEmail,
-    },
-    update: {
-      name: 'Admin User',
-      password: hashedAdminPassword,
-    },
-    create: {
-      name: 'Admin User',
-      email: adminEmail,
-      password: hashedAdminPassword,
-    },
-  })
-
   console.log(`Seeded nurse account: ${nurseEmail} / ${nursePassword}`)
-  console.log(`Seeded admin account: ${adminEmail} / ${adminPassword}`)
 }
 
 main()
