@@ -29,6 +29,7 @@ export type ConsultationMinAggregateOutputType = {
   visitId: string | null
   nurseId: string | null
   notes: string | null
+  mlSuggestion: string | null
   date: Date | null
 }
 
@@ -37,6 +38,7 @@ export type ConsultationMaxAggregateOutputType = {
   visitId: string | null
   nurseId: string | null
   notes: string | null
+  mlSuggestion: string | null
   date: Date | null
 }
 
@@ -56,6 +58,7 @@ export type ConsultationMinAggregateInputType = {
   visitId?: true
   nurseId?: true
   notes?: true
+  mlSuggestion?: true
   date?: true
 }
 
@@ -64,6 +67,7 @@ export type ConsultationMaxAggregateInputType = {
   visitId?: true
   nurseId?: true
   notes?: true
+  mlSuggestion?: true
   date?: true
 }
 
@@ -154,7 +158,7 @@ export type ConsultationGroupByOutputType = {
   visitId: string
   nurseId: string
   notes: string
-  mlSuggestion: runtime.JsonValue | null
+  mlSuggestion: string | null
   date: Date
   _count: ConsultationCountAggregateOutputType | null
   _min: ConsultationMinAggregateOutputType | null
@@ -184,7 +188,7 @@ export type ConsultationWhereInput = {
   visitId?: Prisma.StringFilter<"Consultation"> | string
   nurseId?: Prisma.StringFilter<"Consultation"> | string
   notes?: Prisma.StringFilter<"Consultation"> | string
-  mlSuggestion?: Prisma.JsonNullableFilter<"Consultation">
+  mlSuggestion?: Prisma.StringNullableFilter<"Consultation"> | string | null
   date?: Prisma.DateTimeFilter<"Consultation"> | Date | string
   visit?: Prisma.XOR<Prisma.VisitScalarRelationFilter, Prisma.VisitWhereInput>
   nurse?: Prisma.XOR<Prisma.NurseScalarRelationFilter, Prisma.NurseWhereInput>
@@ -211,7 +215,7 @@ export type ConsultationWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.ConsultationWhereInput | Prisma.ConsultationWhereInput[]
   nurseId?: Prisma.StringFilter<"Consultation"> | string
   notes?: Prisma.StringFilter<"Consultation"> | string
-  mlSuggestion?: Prisma.JsonNullableFilter<"Consultation">
+  mlSuggestion?: Prisma.StringNullableFilter<"Consultation"> | string | null
   date?: Prisma.DateTimeFilter<"Consultation"> | Date | string
   visit?: Prisma.XOR<Prisma.VisitScalarRelationFilter, Prisma.VisitWhereInput>
   nurse?: Prisma.XOR<Prisma.NurseScalarRelationFilter, Prisma.NurseWhereInput>
@@ -238,14 +242,14 @@ export type ConsultationScalarWhereWithAggregatesInput = {
   visitId?: Prisma.StringWithAggregatesFilter<"Consultation"> | string
   nurseId?: Prisma.StringWithAggregatesFilter<"Consultation"> | string
   notes?: Prisma.StringWithAggregatesFilter<"Consultation"> | string
-  mlSuggestion?: Prisma.JsonNullableWithAggregatesFilter<"Consultation">
+  mlSuggestion?: Prisma.StringNullableWithAggregatesFilter<"Consultation"> | string | null
   date?: Prisma.DateTimeWithAggregatesFilter<"Consultation"> | Date | string
 }
 
 export type ConsultationCreateInput = {
   id?: string
   notes: string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: string | null
   date?: Date | string
   visit: Prisma.VisitCreateNestedOneWithoutConsultationInput
   nurse: Prisma.NurseCreateNestedOneWithoutConsultationsInput
@@ -257,7 +261,7 @@ export type ConsultationUncheckedCreateInput = {
   visitId: string
   nurseId: string
   notes: string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: string | null
   date?: Date | string
   medications?: Prisma.MedicationUncheckedCreateNestedManyWithoutConsultationInput
 }
@@ -265,7 +269,7 @@ export type ConsultationUncheckedCreateInput = {
 export type ConsultationUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   visit?: Prisma.VisitUpdateOneRequiredWithoutConsultationNestedInput
   nurse?: Prisma.NurseUpdateOneRequiredWithoutConsultationsNestedInput
@@ -277,7 +281,7 @@ export type ConsultationUncheckedUpdateInput = {
   visitId?: Prisma.StringFieldUpdateOperationsInput | string
   nurseId?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medications?: Prisma.MedicationUncheckedUpdateManyWithoutConsultationNestedInput
 }
@@ -287,14 +291,14 @@ export type ConsultationCreateManyInput = {
   visitId: string
   nurseId: string
   notes: string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: string | null
   date?: Date | string
 }
 
 export type ConsultationUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -303,7 +307,7 @@ export type ConsultationUncheckedUpdateManyInput = {
   visitId?: Prisma.StringFieldUpdateOperationsInput | string
   nurseId?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -336,6 +340,7 @@ export type ConsultationMaxOrderByAggregateInput = {
   visitId?: Prisma.SortOrder
   nurseId?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  mlSuggestion?: Prisma.SortOrder
   date?: Prisma.SortOrder
 }
 
@@ -344,6 +349,7 @@ export type ConsultationMinOrderByAggregateInput = {
   visitId?: Prisma.SortOrder
   nurseId?: Prisma.SortOrder
   notes?: Prisma.SortOrder
+  mlSuggestion?: Prisma.SortOrder
   date?: Prisma.SortOrder
 }
 
@@ -443,7 +449,7 @@ export type ConsultationUpdateOneRequiredWithoutMedicationsNestedInput = {
 export type ConsultationCreateWithoutNurseInput = {
   id?: string
   notes: string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: string | null
   date?: Date | string
   visit: Prisma.VisitCreateNestedOneWithoutConsultationInput
   medications?: Prisma.MedicationCreateNestedManyWithoutConsultationInput
@@ -453,7 +459,7 @@ export type ConsultationUncheckedCreateWithoutNurseInput = {
   id?: string
   visitId: string
   notes: string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: string | null
   date?: Date | string
   medications?: Prisma.MedicationUncheckedCreateNestedManyWithoutConsultationInput
 }
@@ -491,14 +497,14 @@ export type ConsultationScalarWhereInput = {
   visitId?: Prisma.StringFilter<"Consultation"> | string
   nurseId?: Prisma.StringFilter<"Consultation"> | string
   notes?: Prisma.StringFilter<"Consultation"> | string
-  mlSuggestion?: Prisma.JsonNullableFilter<"Consultation">
+  mlSuggestion?: Prisma.StringNullableFilter<"Consultation"> | string | null
   date?: Prisma.DateTimeFilter<"Consultation"> | Date | string
 }
 
 export type ConsultationCreateWithoutVisitInput = {
   id?: string
   notes: string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: string | null
   date?: Date | string
   nurse: Prisma.NurseCreateNestedOneWithoutConsultationsInput
   medications?: Prisma.MedicationCreateNestedManyWithoutConsultationInput
@@ -508,7 +514,7 @@ export type ConsultationUncheckedCreateWithoutVisitInput = {
   id?: string
   nurseId: string
   notes: string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: string | null
   date?: Date | string
   medications?: Prisma.MedicationUncheckedCreateNestedManyWithoutConsultationInput
 }
@@ -532,7 +538,7 @@ export type ConsultationUpdateToOneWithWhereWithoutVisitInput = {
 export type ConsultationUpdateWithoutVisitInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   nurse?: Prisma.NurseUpdateOneRequiredWithoutConsultationsNestedInput
   medications?: Prisma.MedicationUpdateManyWithoutConsultationNestedInput
@@ -542,7 +548,7 @@ export type ConsultationUncheckedUpdateWithoutVisitInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nurseId?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medications?: Prisma.MedicationUncheckedUpdateManyWithoutConsultationNestedInput
 }
@@ -550,7 +556,7 @@ export type ConsultationUncheckedUpdateWithoutVisitInput = {
 export type ConsultationCreateWithoutMedicationsInput = {
   id?: string
   notes: string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: string | null
   date?: Date | string
   visit: Prisma.VisitCreateNestedOneWithoutConsultationInput
   nurse: Prisma.NurseCreateNestedOneWithoutConsultationsInput
@@ -561,7 +567,7 @@ export type ConsultationUncheckedCreateWithoutMedicationsInput = {
   visitId: string
   nurseId: string
   notes: string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: string | null
   date?: Date | string
 }
 
@@ -584,7 +590,7 @@ export type ConsultationUpdateToOneWithWhereWithoutMedicationsInput = {
 export type ConsultationUpdateWithoutMedicationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   visit?: Prisma.VisitUpdateOneRequiredWithoutConsultationNestedInput
   nurse?: Prisma.NurseUpdateOneRequiredWithoutConsultationsNestedInput
@@ -595,7 +601,7 @@ export type ConsultationUncheckedUpdateWithoutMedicationsInput = {
   visitId?: Prisma.StringFieldUpdateOperationsInput | string
   nurseId?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -603,14 +609,14 @@ export type ConsultationCreateManyNurseInput = {
   id?: string
   visitId: string
   notes: string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: string | null
   date?: Date | string
 }
 
 export type ConsultationUpdateWithoutNurseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   visit?: Prisma.VisitUpdateOneRequiredWithoutConsultationNestedInput
   medications?: Prisma.MedicationUpdateManyWithoutConsultationNestedInput
@@ -620,7 +626,7 @@ export type ConsultationUncheckedUpdateWithoutNurseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   visitId?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   medications?: Prisma.MedicationUncheckedUpdateManyWithoutConsultationNestedInput
 }
@@ -629,7 +635,7 @@ export type ConsultationUncheckedUpdateManyWithoutNurseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   visitId?: Prisma.StringFieldUpdateOperationsInput | string
   notes?: Prisma.StringFieldUpdateOperationsInput | string
-  mlSuggestion?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  mlSuggestion?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -736,7 +742,7 @@ export type $ConsultationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     visitId: string
     nurseId: string
     notes: string
-    mlSuggestion: runtime.JsonValue | null
+    mlSuggestion: string | null
     date: Date
   }, ExtArgs["result"]["consultation"]>
   composites: {}
@@ -1168,7 +1174,7 @@ export interface ConsultationFieldRefs {
   readonly visitId: Prisma.FieldRef<"Consultation", 'String'>
   readonly nurseId: Prisma.FieldRef<"Consultation", 'String'>
   readonly notes: Prisma.FieldRef<"Consultation", 'String'>
-  readonly mlSuggestion: Prisma.FieldRef<"Consultation", 'Json'>
+  readonly mlSuggestion: Prisma.FieldRef<"Consultation", 'String'>
   readonly date: Prisma.FieldRef<"Consultation", 'DateTime'>
 }
     

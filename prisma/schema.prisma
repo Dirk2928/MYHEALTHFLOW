@@ -8,20 +8,20 @@ generator client {
 }
 
 model Patient {
-  id          String     @id @default(uuid())
-  name        String
-  dob         DateTime
-  barangayId  String
-  address     String?
-  contactNo   String?
+  id               String     @id @default(cuid())
+  name             String
+  dob              DateTime
+  barangayId       String
+  address          String?
+  contactNo        String?
   emergencyContact String?
-  createdAt   DateTime   @default(now())
-  visits      Visit[]
-  followUps   FollowUp[]
+  createdAt        DateTime   @default(now())
+  visits           Visit[]
+  followUps        FollowUp[]
 }
 
 model Nurse {
-  id            String         @id @default(uuid())
+  id            String         @id @default(cuid())
   name          String
   email         String         @unique
   password      String
@@ -30,7 +30,7 @@ model Nurse {
 }
 
 model Admin {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   name      String
   email     String   @unique
   password  String
@@ -38,7 +38,7 @@ model Admin {
 }
 
 model Visit {
-  id           String             @id @default(uuid())
+  id           String             @id @default(cuid())
   patient      Patient            @relation(fields: [patientId], references: [id])
   patientId    String
   date         DateTime           @default(now())
@@ -47,27 +47,27 @@ model Visit {
 }
 
 model SymptomAssessment {
-  id        String @id @default(uuid())
-  visit     Visit  @relation(fields: [visitId], references: [id])
-  visitId   String @unique
-  symptoms  Json
-  answers   Json
+  id      String @id @default(cuid())
+  visit   Visit  @relation(fields: [visitId], references: [id])
+  visitId String @unique
+  symptoms String
+  answers  String
 }
 
 model Consultation {
-  id           String       @id @default(uuid())
+  id           String       @id @default(cuid())
   visit        Visit        @relation(fields: [visitId], references: [id])
   visitId      String       @unique
   nurse        Nurse        @relation(fields: [nurseId], references: [id])
   nurseId      String
   notes        String
-  mlSuggestion Json?
+  mlSuggestion String?
   date         DateTime     @default(now())
   medications  Medication[]
 }
 
 model Medication {
-  id             String       @id @default(uuid())
+  id             String       @id @default(cuid())
   consultation   Consultation @relation(fields: [consultationId], references: [id])
   consultationId String
   name           String
@@ -75,7 +75,7 @@ model Medication {
 }
 
 model FollowUp {
-  id        String   @id @default(uuid())
+  id        String   @id @default(cuid())
   patient   Patient  @relation(fields: [patientId], references: [id])
   patientId String
   date      DateTime

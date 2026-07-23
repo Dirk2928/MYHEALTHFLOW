@@ -27,11 +27,15 @@ export type AggregateSymptomAssessment = {
 export type SymptomAssessmentMinAggregateOutputType = {
   id: string | null
   visitId: string | null
+  symptoms: string | null
+  answers: string | null
 }
 
 export type SymptomAssessmentMaxAggregateOutputType = {
   id: string | null
   visitId: string | null
+  symptoms: string | null
+  answers: string | null
 }
 
 export type SymptomAssessmentCountAggregateOutputType = {
@@ -46,11 +50,15 @@ export type SymptomAssessmentCountAggregateOutputType = {
 export type SymptomAssessmentMinAggregateInputType = {
   id?: true
   visitId?: true
+  symptoms?: true
+  answers?: true
 }
 
 export type SymptomAssessmentMaxAggregateInputType = {
   id?: true
   visitId?: true
+  symptoms?: true
+  answers?: true
 }
 
 export type SymptomAssessmentCountAggregateInputType = {
@@ -136,8 +144,8 @@ export type SymptomAssessmentGroupByArgs<ExtArgs extends runtime.Types.Extension
 export type SymptomAssessmentGroupByOutputType = {
   id: string
   visitId: string
-  symptoms: runtime.JsonValue
-  answers: runtime.JsonValue
+  symptoms: string
+  answers: string
   _count: SymptomAssessmentCountAggregateOutputType | null
   _min: SymptomAssessmentMinAggregateOutputType | null
   _max: SymptomAssessmentMaxAggregateOutputType | null
@@ -164,8 +172,8 @@ export type SymptomAssessmentWhereInput = {
   NOT?: Prisma.SymptomAssessmentWhereInput | Prisma.SymptomAssessmentWhereInput[]
   id?: Prisma.StringFilter<"SymptomAssessment"> | string
   visitId?: Prisma.StringFilter<"SymptomAssessment"> | string
-  symptoms?: Prisma.JsonFilter<"SymptomAssessment">
-  answers?: Prisma.JsonFilter<"SymptomAssessment">
+  symptoms?: Prisma.StringFilter<"SymptomAssessment"> | string
+  answers?: Prisma.StringFilter<"SymptomAssessment"> | string
   visit?: Prisma.XOR<Prisma.VisitScalarRelationFilter, Prisma.VisitWhereInput>
 }
 
@@ -183,8 +191,8 @@ export type SymptomAssessmentWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.SymptomAssessmentWhereInput | Prisma.SymptomAssessmentWhereInput[]
   OR?: Prisma.SymptomAssessmentWhereInput[]
   NOT?: Prisma.SymptomAssessmentWhereInput | Prisma.SymptomAssessmentWhereInput[]
-  symptoms?: Prisma.JsonFilter<"SymptomAssessment">
-  answers?: Prisma.JsonFilter<"SymptomAssessment">
+  symptoms?: Prisma.StringFilter<"SymptomAssessment"> | string
+  answers?: Prisma.StringFilter<"SymptomAssessment"> | string
   visit?: Prisma.XOR<Prisma.VisitScalarRelationFilter, Prisma.VisitWhereInput>
 }, "id" | "visitId">
 
@@ -204,56 +212,56 @@ export type SymptomAssessmentScalarWhereWithAggregatesInput = {
   NOT?: Prisma.SymptomAssessmentScalarWhereWithAggregatesInput | Prisma.SymptomAssessmentScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"SymptomAssessment"> | string
   visitId?: Prisma.StringWithAggregatesFilter<"SymptomAssessment"> | string
-  symptoms?: Prisma.JsonWithAggregatesFilter<"SymptomAssessment">
-  answers?: Prisma.JsonWithAggregatesFilter<"SymptomAssessment">
+  symptoms?: Prisma.StringWithAggregatesFilter<"SymptomAssessment"> | string
+  answers?: Prisma.StringWithAggregatesFilter<"SymptomAssessment"> | string
 }
 
 export type SymptomAssessmentCreateInput = {
   id?: string
-  symptoms: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms: string
+  answers: string
   visit: Prisma.VisitCreateNestedOneWithoutAssessmentInput
 }
 
 export type SymptomAssessmentUncheckedCreateInput = {
   id?: string
   visitId: string
-  symptoms: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms: string
+  answers: string
 }
 
 export type SymptomAssessmentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  symptoms?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms?: Prisma.StringFieldUpdateOperationsInput | string
+  answers?: Prisma.StringFieldUpdateOperationsInput | string
   visit?: Prisma.VisitUpdateOneRequiredWithoutAssessmentNestedInput
 }
 
 export type SymptomAssessmentUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   visitId?: Prisma.StringFieldUpdateOperationsInput | string
-  symptoms?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms?: Prisma.StringFieldUpdateOperationsInput | string
+  answers?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SymptomAssessmentCreateManyInput = {
   id?: string
   visitId: string
-  symptoms: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms: string
+  answers: string
 }
 
 export type SymptomAssessmentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  symptoms?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms?: Prisma.StringFieldUpdateOperationsInput | string
+  answers?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SymptomAssessmentUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   visitId?: Prisma.StringFieldUpdateOperationsInput | string
-  symptoms?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms?: Prisma.StringFieldUpdateOperationsInput | string
+  answers?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SymptomAssessmentNullableScalarRelationFilter = {
@@ -271,11 +279,15 @@ export type SymptomAssessmentCountOrderByAggregateInput = {
 export type SymptomAssessmentMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   visitId?: Prisma.SortOrder
+  symptoms?: Prisma.SortOrder
+  answers?: Prisma.SortOrder
 }
 
 export type SymptomAssessmentMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   visitId?: Prisma.SortOrder
+  symptoms?: Prisma.SortOrder
+  answers?: Prisma.SortOrder
 }
 
 export type SymptomAssessmentCreateNestedOneWithoutVisitInput = {
@@ -312,14 +324,14 @@ export type SymptomAssessmentUncheckedUpdateOneWithoutVisitNestedInput = {
 
 export type SymptomAssessmentCreateWithoutVisitInput = {
   id?: string
-  symptoms: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms: string
+  answers: string
 }
 
 export type SymptomAssessmentUncheckedCreateWithoutVisitInput = {
   id?: string
-  symptoms: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms: string
+  answers: string
 }
 
 export type SymptomAssessmentCreateOrConnectWithoutVisitInput = {
@@ -340,14 +352,14 @@ export type SymptomAssessmentUpdateToOneWithWhereWithoutVisitInput = {
 
 export type SymptomAssessmentUpdateWithoutVisitInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  symptoms?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms?: Prisma.StringFieldUpdateOperationsInput | string
+  answers?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type SymptomAssessmentUncheckedUpdateWithoutVisitInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  symptoms?: Prisma.JsonNullValueInput | runtime.InputJsonValue
-  answers?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  symptoms?: Prisma.StringFieldUpdateOperationsInput | string
+  answers?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -402,8 +414,8 @@ export type $SymptomAssessmentPayload<ExtArgs extends runtime.Types.Extensions.I
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     visitId: string
-    symptoms: runtime.JsonValue
-    answers: runtime.JsonValue
+    symptoms: string
+    answers: string
   }, ExtArgs["result"]["symptomAssessment"]>
   composites: {}
 }
@@ -830,8 +842,8 @@ export interface Prisma__SymptomAssessmentClient<T, Null = never, ExtArgs extend
 export interface SymptomAssessmentFieldRefs {
   readonly id: Prisma.FieldRef<"SymptomAssessment", 'String'>
   readonly visitId: Prisma.FieldRef<"SymptomAssessment", 'String'>
-  readonly symptoms: Prisma.FieldRef<"SymptomAssessment", 'Json'>
-  readonly answers: Prisma.FieldRef<"SymptomAssessment", 'Json'>
+  readonly symptoms: Prisma.FieldRef<"SymptomAssessment", 'String'>
+  readonly answers: Prisma.FieldRef<"SymptomAssessment", 'String'>
 }
     
 
