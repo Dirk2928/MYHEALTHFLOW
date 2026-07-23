@@ -10,13 +10,27 @@ type RecentVisit = {
   id: string
   date: string
   patient: { id: string; name: string; barangayId: string }
-  assessment: { symptoms: string[] } | null
+  assessment: { symptoms: any } | null
 }
 
 type DashboardData = {
   totalPatients: number
   todayVisits: number
   recentVisits: RecentVisit[]
+}
+
+function parseSymptoms(symptoms: any): string {
+  if (!symptoms) return '—'
+  if (Array.isArray(symptoms)) return symptoms.join(', ')
+  if (typeof symptoms === 'string') {
+    try {
+      const parsed = JSON.parse(symptoms)
+      return Array.isArray(parsed) ? parsed.join(', ') : '—'
+    } catch {
+      return '—'
+    }
+  }
+  return '—'
 }
 
 export default function DashboardPage() {
@@ -195,7 +209,7 @@ export default function DashboardPage() {
                       <tr key={visit.id} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors">
                         <td className="py-3 font-semibold text-slate-800">{visit.patient.name}</td>
                         <td className="py-3 text-slate-500">{visit.patient.barangayId}</td>
-                        <td className="py-3 text-slate-500">{visit.assessment ? (visit.assessment.symptoms as string[]).join(', ') : '—'}</td>
+                        <td className="py-3 text-slate-500">{parseSymptoms(visit.assessment?.symptoms)}</td>
                         <td className="py-3 text-slate-500">{new Date(visit.date).toLocaleDateString()}</td>
                         <td className="py-3 text-right">
                           <Link href={`/dashboard/patients/${visit.patient.id}`} className="text-blue-600 hover:bg-blue-50 text-xs font-medium px-3 py-1.5 rounded-lg transition-colors">
